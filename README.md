@@ -8,12 +8,12 @@ https://stack-of-tasks.github.io/pinocchio/download.html
 
 Ubuntu 18.04 
 
-''''
+'''shell
 sudo apt install -qqy robotpkg-py36-pinocchio
-''''
+'''
 
 Ubuntu 20.04
 
-''''
+'''c++
 sudo apt install -qqy robotpkg-py38-pinocchio
-''''
+'''
