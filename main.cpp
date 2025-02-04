@@ -1,9 +1,10 @@
 #include<iostream>
 #include<string>
 using namespace std;
+
 #include<Eigen/Dense>
 using namespace Eigen;
-#include "pinocchio/parsers/sample-models.hpp"
+
 #include "pinocchio/algorithm/joint-configuration.hpp"
 #include "pinocchio/algorithm/rnea.hpp"
 #include "pinocchio/algorithm/kinematics.hpp"
@@ -13,34 +14,21 @@ namespace pin = pinocchio;
 
 void test01()
 {
-  pin::Model model;
-  pin::buildModels::manipulator(model);
-  pin::Data data(model);
- 
-  VectorXd q = pin::neutral(model);
-  VectorXd v = VectorXd::Zero(model.nv);
-  VectorXd a = VectorXd::Zero(model.nv);
- 
-  const VectorXd & tau = pin::rnea(model,data,q,v,a); // const typr& 常引用
-  cout << "tau = " << tau.transpose() << endl;
-}
-
-void test02()
-{
-  // urdf path
-  const string urdf_filename = string("./urdf/ur5_robot.urdf");
-  // load the urdf model
+  const string urdf_filename = string("../ur5/urdf/ur5_robot.urdf");
   pin::Model model;
   pin::urdf::buildModel(urdf_filename, model);
   cout << "model name: " << model.name << endl;
-  // create data required by the algorithms
+
   pin::Data data(model);
-  // sample a random configuration
+
   VectorXd q = pin::randomConfiguration(model);
   cout << "q: " << q.transpose() << endl;
-  // perform the forward kinematics over the kinematic tree
+  VectorXd v = VectorXd::Zero(model.nv);
+  VectorXd a = VectorXd::Zero(model.nv);
+  const VectorXd & tau = pin::rnea(model,data,q,v,a); // const typr& 常引用
+  cout << "tau = " << tau.transpose() << endl;
+
   pin::forwardKinematics(model, data, q);
-  // Print out the placement of each joint of the kinematic tree
   for(pin::JointIndex joint_id = 0; joint_id < (pin::JointIndex)model.njoints; ++joint_id)
   {
     cout << setw(24) << left
@@ -51,7 +39,7 @@ void test02()
   }
 }
 
-void test03()
+void test02()
 {
   // skew 
   Vector3d p1(0,0,1); 
@@ -111,6 +99,7 @@ void test03()
 
 int main()
 {
-  test03();
+  test01();
+  test02();
   return 0;
 }
